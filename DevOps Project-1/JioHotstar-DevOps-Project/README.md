@@ -102,6 +102,9 @@ terraform apply
 terraform destroy
 ```
 
+<img width="1665" height="778" alt="image" src="https://github.com/user-attachments/assets/7d6da8ec-a5d8-4698-ab28-065175bd155c" />
+
+
 ## Step2: Installing the jenkins:
 
 ref: https://www.jenkins.io/doc/book/installing/linux/#debianubuntu
@@ -132,6 +135,9 @@ systemctl status jenkins
 
 ```
 
+<img width="1894" height="374" alt="image" src="https://github.com/user-attachments/assets/1a0ed224-d5e4-4e3f-be39-a0ef7f3453cf" />
+
+
 ## Step3: Docker Installation
 
 ```
@@ -146,6 +152,37 @@ apt-cache policy docker-ce
 sudo apt install docker-ce -y
 sudo systemctl status docker
 ```
+<img width="1891" height="401" alt="image" src="https://github.com/user-attachments/assets/f194abfa-4cc9-40ef-b05f-a0fd8b083a76" />
+
+### Jenkins Set-Up
+
+#### Enter Default Password
+```
+cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+![jenkins-set1](https://github.com/user-attachments/assets/cc09f1c4-4e4d-4a8e-bde2-678b38f5fd71)
+
+## Step9: Install Required Plugins 
+
+<img width="995" height="914" alt="image" src="https://github.com/user-attachments/assets/c0a3229d-5c90-456e-bd0d-09d5964f0b2c" />
+
+<img width="1517" height="814" alt="image" src="https://github.com/user-attachments/assets/79ea2751-5f13-4f2d-85f4-830e3e1ea04e" />
+
+
+#### Add Credentials AWS Access key & Secret access key
+
+```
+1. Go to manage jenkins
+2. Go to Credentials
+3. System >>> Global
+4. Add Credentials
+5. Secrete Text  Add Details
+```
+<img width="1918" height="944" alt="image" src="https://github.com/user-attachments/assets/0a6c477a-7993-4d8f-a726-326138c35fe7" />
+
+#### Add Docker Credentials
+
+<img width="1905" height="940" alt="image" src="https://github.com/user-attachments/assets/19e0f516-e934-4df2-ab74-574abbedbdf0" />
 
 ## Step4: Terraform Installation 
 
@@ -161,6 +198,14 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashi
 sudo apt update
 sudo apt-get install terraform -y
 ```
+
+### Add Tools 
+#### JDK Tool Install
+<img width="1635" height="520" alt="image" src="https://github.com/user-attachments/assets/2c91fece-a537-4373-94cf-a1844b5eea27" />
+
+#### SonarQube Scanner installations
+<img width="1592" height="536" alt="image" src="https://github.com/user-attachments/assets/99a22fdc-4998-4df3-afe5-8ea626838bca" />
+
 
 ## Step5: Setup Kubernetes on Amazon EKS
 
@@ -195,14 +240,27 @@ sudo apt-get install terraform -y
    kubectl version --client
    ```
 
-## AWSCLI
+## AWS CLI Installation
 
 ```bash
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
 ```
-## KUBECTL
+<img width="693" height="57" alt="image" src="https://github.com/user-attachments/assets/ebd4c299-5af8-45a2-a9a2-75b28bf1c26b" />
+
+### AWS CLI Configure 
+```
+root@ip-172-31-81-213:~/Jio-hotstar-DevSecOps-Project/scripts# aws configure
+AWS Access Key ID [None]: **************
+AWS Secret Access Key [None]: ************
+Default region name [None]: us-east-1
+Default output format [None]: json
+```
+<img width="705" height="110" alt="image" src="https://github.com/user-attachments/assets/7aa04646-688c-474f-b191-cee0f27f4370" />
+
+
+## KUBECTL Installation & Set-Up
 
 ```bash
 curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.29.3/2024-04-19/bin/linux/amd64/kubectl
@@ -210,6 +268,19 @@ chmod +x ./kubectl
 mv ./kubectl /usr/local/bin
 kubectl version --client
 ```
+
+### kubectl setup
+```
+ls -a
+cd .kube
+ls
+```
+#### configure file is missiing 
+```
+aws eks update-kubeconfig --region {AWS_REGION} --name {CLUSTER_NAME}
+```
+<img width="932" height="131" alt="image" src="https://github.com/user-attachments/assets/d69e29e1-4f8f-4c9b-8b82-720de4522091" />
+
 
 ## EKSCTL
 
@@ -225,8 +296,9 @@ eksctl version
 ## Create Service Account, Role & Assign that role, and create a secret for Service Account and genrate a Token
 
 ### Creating Service Account
-
-
+```
+vi service.yaml
+```
 ```yaml
 apiVersion: v1
 kind: ServiceAccount
@@ -234,10 +306,15 @@ metadata:
   name: jenkins
   namespace: microdegree
 ```
+```
+kubectl apply -f sa.yaml -n microdegree
+```
+<img width="657" height="104" alt="image" src="https://github.com/user-attachments/assets/bc3617e9-4a75-4d9f-82ff-6d1a36e0d1fc" />
 
 ### Create Role 
-
-
+```
+vi role.yaml
+```
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -278,9 +355,11 @@ rules:
       - services
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 ```
+```
+kubectl apply -f role.yaml -n microdegree
+```
 
 ### Bind the role to service account
-
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -297,11 +376,16 @@ subjects:
   kind: ServiceAccount
   name: jenkins 
 ```
+```
+kubectl apply -f rolebind.yaml -n microdegree
+```
 
 ### Generate token using service account in the namespace
 
 [Create Token]
-
+```
+vi token.yaml
+```
 ```token.yml
 apiVersion: v1
 kind: Secret
@@ -312,6 +396,16 @@ metadata:
     kubernetes.io/service-account.name: jenkins
 type: kubernetes.io/service-account-token
 ```
+```
+kubectl apply -f token.yaml -n microdegree
+```
+```
+kubectl describe secret/mysecretname -n microdegree
+```
+#### Add tocken to jenkins Credentials 
+
+<img width="1897" height="936" alt="image" src="https://github.com/user-attachments/assets/2e5eb944-ffbf-4039-a62c-e5fb49082ed0" />
+
 
 
 ## Step7: Add Tools for Java & NodejS
@@ -319,6 +413,21 @@ type: kubernetes.io/service-account-token
 <img width="1652" height="661" alt="image" src="https://github.com/user-attachments/assets/0228e334-6dea-4005-96c7-5d74008b22eb" />
 
 <img width="1483" height="773" alt="nodejs" src="https://github.com/user-attachments/assets/9a9ce220-9559-4032-a4b6-1a8baba8ce23" />
+
+#### Add Role to Admin Server 
+```
+1. Go to Iam role
+2. Create Role Add permissions
+    AdministratorAccess
+    AmazonEC2FullAccess
+    AWSCloudFormationFullAccess
+    IAMFullAccess
+
+3. Assigne Role to Admin Server
+```
+<img width="1912" height="476" alt="image" src="https://github.com/user-attachments/assets/cc3b5f4d-4225-4827-b10b-e0aff4ed0a9e" />
+
+<img width="1756" height="340" alt="image" src="https://github.com/user-attachments/assets/ec7086f6-3a8b-4042-8c5a-74e842fb9a5d" />
 
 
 ## Step8: Configure Email Setup 
@@ -359,25 +468,21 @@ SMTP Port ---> 465
 Advanced-credentials-->username and password --> gmail and app password + check use ssl
 ```
 
-## Step9: Install Required Plugins 
-
-<img width="1512" height="826" alt="image" src="https://github.com/user-attachments/assets/f1eb9686-68b0-4e65-a91b-d19f54df49be" />
-
-<img width="1517" height="295" alt="image" src="https://github.com/user-attachments/assets/321b43e0-cf3f-4661-ad58-07b5c8e5a720" />
-
-
 ## Jio Hotstar Web Page
 
 url:http://af51eb587f6444a30b43ece4a189b100-1821373873.us-east-1.elb.amazonaws.com/
 
-<img width="1913" height="968" alt="image" src="https://github.com/user-attachments/assets/bb94f853-8e55-4d26-b342-4ca03df98aa5" />
+<img width="1584" height="699" alt="image" src="https://github.com/user-attachments/assets/3e28fc21-c95b-4d03-b8ae-53b225250c54" />
 
-<img width="1381" height="592" alt="image" src="https://github.com/user-attachments/assets/de51abc2-489f-470c-a022-bb651bc829cd" />
+<img width="1920" height="1001" alt="image" src="https://github.com/user-attachments/assets/2bd79779-7ab5-4d31-b530-57ec747e9753" />
 
 
 ## Step10: Destrory EKS Cluster 
 
-<img width="925" height="565" alt="image" src="https://github.com/user-attachments/assets/17326ede-f353-477c-bde4-04296396e17e" />
+<img width="1636" height="681" alt="image" src="https://github.com/user-attachments/assets/36cb0608-49b4-4e7e-953d-98f305602cb3" />
+
+<img width="1920" height="506" alt="image" src="https://github.com/user-attachments/assets/ea23eebd-ee6e-4241-85fa-da7f8528db11" />
+
 
 <img width="1328" height="302" alt="image" src="https://github.com/user-attachments/assets/4d8d84c3-3f69-4697-8145-95bbad74322f" />
 
