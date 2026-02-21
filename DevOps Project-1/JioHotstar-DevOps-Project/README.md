@@ -479,14 +479,18 @@ url:http://af51eb587f6444a30b43ece4a189b100-1821373873.us-east-1.elb.amazonaws.c
 
 ## Step10: Destrory EKS Cluster 
 
+<img width="1284" height="798" alt="image" src="https://github.com/user-attachments/assets/e0fd7f81-ea02-4ab6-8b94-36914ffcd13f" />
+
 <img width="1636" height="681" alt="image" src="https://github.com/user-attachments/assets/36cb0608-49b4-4e7e-953d-98f305602cb3" />
 
 <img width="1920" height="506" alt="image" src="https://github.com/user-attachments/assets/ea23eebd-ee6e-4241-85fa-da7f8528db11" />
 
+<img width="1395" height="830" alt="image" src="https://github.com/user-attachments/assets/2dab9ef9-9b93-443a-9554-3798b9090e52" />
 
-<img width="1328" height="302" alt="image" src="https://github.com/user-attachments/assets/4d8d84c3-3f69-4697-8145-95bbad74322f" />
+## Step11: Terminate (delete) Admin Server
+<img width="1658" height="330" alt="image" src="https://github.com/user-attachments/assets/f06fcd61-a974-42cc-b949-553cff030c8a" />
 
-<img width="932" height="557" alt="image" src="https://github.com/user-attachments/assets/401b0f45-fe11-40c5-a361-1690b3249a0d" />
+<img width="894" height="502" alt="image" src="https://github.com/user-attachments/assets/d33b3c30-67e1-4e52-a099-65d8e3927ac8" />
 
 
 
