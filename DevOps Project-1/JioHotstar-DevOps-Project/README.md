@@ -51,7 +51,7 @@ a. The pipeline sends real-time status updates to Slack/Email to notify the team
 
 ## Complete architecture - cicd-project
 
-![Untitled (7)](https://github.com/user-attachments/assets/90f06160-d8f0-4682-b12f-9b7d0ead298e)
+![Untitled (7)](https://github.com/user-attachments/assets/7b5442a1-1ee9-4492-807e-c660c3698731)
 
 ## Step1: Admin Server Installation via VSCode & Terraform 
 
@@ -318,7 +318,7 @@ type: kubernetes.io/service-account-token
 
 <img width="1652" height="661" alt="image" src="https://github.com/user-attachments/assets/0228e334-6dea-4005-96c7-5d74008b22eb" />
 
-<img width="1483" height="773" alt="nodejs" src="https://github.com/user-attachments/assets/b4e00271-6c1b-41c0-b626-f6d0adc35ce2" />
+<img width="1483" height="773" alt="nodejs" src="https://github.com/user-attachments/assets/9a9ce220-9559-4032-a4b6-1a8baba8ce23" />
 
 
 ## Step8: Configure Email Setup 
